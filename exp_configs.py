@@ -28,9 +28,9 @@ EXP_GROUPS = {
                       "task": ["loc"],
                         "model":[
                            "fcn8"],
-                        "batch_size": [1],
+                        "batch_size": [0],
                         "transform":["rgb_normalize"],
-                        "max_epoch": [1000],
+                        "max_epoch": [100],
                         "wrapper":["loc_wrapper"]},
 
 

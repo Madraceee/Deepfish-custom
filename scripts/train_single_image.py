@@ -17,6 +17,8 @@ from torch import nn
 import torchvision.transforms as T
 import exp_configs
 
+from koila import lazy
+
 cudnn.benchmark = True
 
 if __name__ == "__main__":
@@ -36,7 +38,6 @@ if __name__ == "__main__":
                                      transform=exp_dict.get("transform"),
                                      datadir=args.datadir)
     
-  
     # Create model, opt, wrapper
     model_original = models.get_model(exp_dict["model"], exp_dict=exp_dict).cuda()
     opt = torch.optim.Adam(model_original.parameters(), 
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     else:
         batch = torch.utils.data.dataloader.default_collate([train_set[10]])
 
+    
     for e in range(50):
         score_dict = model.train_on_batch(batch)
         print(e, score_dict)

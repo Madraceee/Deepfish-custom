@@ -35,6 +35,7 @@ class LocWrapper(torch.nn.Module):
     def vis_on_loader(self, vis_loader, savedir):
         return wrappers.vis_on_loader(self, vis_loader, savedir=savedir)
 
+
     def train_on_batch(self, batch, **extras):
         
         self.train()
@@ -90,6 +91,7 @@ class LocWrapper(torch.nn.Module):
         y_list, x_list = np.where(batch["points"][0].long().numpy().squeeze())
         img_peaks = hi.points_on_image(y_list, x_list, img_org, radius=11)
         text = "%s ground truth" % (batch["points"].sum().item())
+        gt = batch["points"].sum().item()
         hi.text_on_image(text=text, image=img_peaks)
 
         # pred points 
@@ -98,6 +100,7 @@ class LocWrapper(torch.nn.Module):
         img_pred = hi.mask_on_image(img_org, pred_blobs)
         # img_pred = hi.points_on_image(y_list, x_list, img_org)
         text = "%s predicted" % (len(y_list))
+        pt = len(y_list)
         hi.text_on_image(text=text, image=img_pred)
 
         # heatmap 
@@ -109,6 +112,7 @@ class LocWrapper(torch.nn.Module):
         img_mask = np.hstack([img_peaks, img_pred, heatmap])
         
         hu.save_image(savedir_image, img_mask)
+        return gt,pt
 class GAME:
     def __init__(self, density=4):
         # super().__init__(higher_is_better=False)
