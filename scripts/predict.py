@@ -46,7 +46,9 @@ if __name__ == "__main__":
     #                     lr=1e-5, weight_decay=0.0005)
 
     model = wrappers.get_wrapper(exp_dict["wrapper"], model=model_original).cuda()
-
+    model.load_state_dict()#Enter path 
     vis_loader = torch.utils.data.DataLoader(val_set, shuffle=False, batch_size=1)
+    print(len(vis_loader))
 
-    model.vis_on_loader(vis_loader, savedir=os.path.join(args.savedir_base, "images"))
+    mae = model.vis_on_loader(vis_loader, savedir=os.path.join(args.savedir_base, "images"))
+    print("MAE is",mae)

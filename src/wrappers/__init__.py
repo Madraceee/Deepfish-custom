@@ -49,7 +49,8 @@ def val_on_loader(model, val_loader, val_monitor):
         # game_monitor.add_batch(gt_points, blobs)
 
     # return val_monitor.get_avg_score(game_monitor.get_score_dict())
-    return val_monitor.get_avg_score()
+    val_dict = test_on_loader(model,val_loader)
+    return val_monitor.get_avg_score(),val_dict
 
 
 @torch.no_grad()
@@ -58,10 +59,19 @@ def vis_on_loader(model, vis_loader, savedir):
 
     n_batches = len(vis_loader)
     split = vis_loader.dataset.split
+
+    ae = 0
+    n=0
     for i, batch in enumerate(vis_loader):
         print("%d - visualizing %s image - savedir:%s" % (i, batch["meta"]["split"][0], savedir.split("/")[-2]))
-        model.vis_on_batch(batch, 
-        savedir_image=os.path.join(savedir, f'{i}.png'))
+        gt,pt = model.vis_on_batch(batch,savedir_image=os.path.join(savedir, f'{i}.png'))
+        ae += abs(gt-pt)
+        n+=1
+    
+    print("AE and n is",ae,n)
+    mae = ae/n
+    return mae
+
         
 
 @torch.no_grad()
